@@ -1,13 +1,19 @@
 pipeline {
   agent any
-  parameters {
-    string(name: 'Greeting', defaultValue: 'Hello', description: 'Some description')
-  }
   stages {
-    stage('Example') {
+    stage('Test') {
       steps {
-        echo "${params.Greeting} World!"
+        sh 'make check'
       }
+    }
+  }
+  post {
+    // always, changed, fixed, regression, aborted, failure, success, unstable, unsuccessful, cleanup
+    always {
+      junit '**/target/*.xml'
+    }
+    failure {
+      mail to: misdu17@gmail.com, subject: 'The Pipeline failed...'
     }
   }
 }
