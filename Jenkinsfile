@@ -1,10 +1,14 @@
 pipeline {
   agent any
   stages {
-    stage('Test') {
+    stage('Deploy') {
+      when {
+        expression {
+          currentBuild.result == null || currentBuild.result == 'SUCCESS'
+        }
+      }
       steps {
-        sh 'make check || true'
-        junit '**/target/*.xml'
+        sh 'make publish'
       }
     }
   }
